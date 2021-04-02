@@ -1,0 +1,64 @@
+[PROJECT]
+Target=main.hex
+Processor_Text=PIC16F877A
+CCSVerions=5.025
+Compiler=PCM
+CCSVersion=5.025
+[Target Data]
+FileList=main.c
+[Directories]
+Include=
+[E:\tales\Documents\Faculdade\Projetos Micro\Projeto Trabalho Proposta B\Trabalhando4\main]
+Type=4
+[mru-list]
+1=main.c
+
+[ProjectLog]
+Days=2
+D1=01-04-2021
+D1_L=23
+D1_L1=[69536]Project Opened.
+D1_L2=[69603]Started Editing.
+D1_L3=[70391]Stopped Editing.
+D1_L4=[70419]Started Editing.
+D1_L5=[71315]Stopped Editing.
+D1_L6=[71315]Started Editing.
+D1_L7=[72453]Stopped Editing.
+D1_L8=[72662]Started Editing.
+D1_L9=[74523]Stopped Editing.
+TotalEdit=59
+TotalDebug=0
+D1_E=59
+D1_D=0
+D1_L10=[78823]Project Closed.
+D1_L11=[78830]Project Opened.
+D1_L12=[78856]Started Editing.
+D1_L13=[79416]Stopped Editing.
+D1_L14=[79597]Started Editing.
+D1_L15=[82004]Stopped Editing.
+D1_L16=[82055]Started Editing.
+D1_L17=[83227]Stopped Editing.
+D1_L18=[83602]Started Editing.
+D1_L19=[83943]Stopped Editing.
+D1_L20=[84112]Started Editing.
+D1_L21=[84558]Stopped Editing.
+D1_L22=[84625]Started Editing.
+D1_L23=[85695]Stopped Editing.
+D2=02-04-2021
+D2_L=6
+D2_L1=[301]Started Editing.
+D2_L2=[603]Stopped Editing.
+D2_L3=[1491]Started Editing.
+D2_L4=[1792]Stopped Editing.
+D2_L5=[1926]Started Editing.
+D2_L6=[2229]Stopped Editing.
+
+[Opened Files]
+1=main.c
+2=
+3=
+[main.c]
+Type=4
+[Units]
+Count=1
+1=main (main)
