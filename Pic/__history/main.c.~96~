@@ -1,4 +1,6 @@
 #include <16F877A.h>
+#include "rtc.h"
+
 #device ADC=10
 
 #FUSES NOWDT                    //No Watch Dog Timer
@@ -20,41 +22,31 @@
 
 #include <mod_lcd.c>
 
+#define C_Ds1307ReadMode_U8   0xD1u  // DS1307 ID in read mode
+#define C_Ds1307WriteMode_U8  0xD0u  // DS1307 ID in write mode
+
+void RTC_Init(void)
+{
+    I2C_Init();                             // Initialize the I2c module.
+    I2C_Start();                            // Start I2C communication
+ 
+    I2C_Write(C_Ds1307WriteMode_U8);        // Connect to DS1307 by sending its ID on I2c Bus
+    I2C_Write(C_Ds1307ControlRegAddress_U8);// Select the Ds1307 ControlRegister to configure Ds1307
+ 
+    I2C_Write(0x00);                        // Write 0x00 to Control register to disable SQW-Out
+    
+    int sec = I2C_Read(1);
+ 
+    I2C_Stop();                             // Stop I2C communication after initializing DS1307
+}
+
 long leituraADC(int canal){
    set_adc_channel(canal);
    delay_us(10);
    return read_adc();
 }
 
-
-#INT_RTCC
-void  RTCC_isr(void) 
-{
-//!   entrada = read_adc();
-//!   temperatura= 30;
-//!   //1000ms/0,0542ms = 18.45 -> 19 ciclos
-//!   //5000ms/0,0542ms = 92 ciclos
-//!   //(19*valor)/1020 -> valor*(19/1020) -> valor*0.0186274509803922
-//!   
-//!   
-//!   
-//!   if(passos <= to){
-//!      output_high(PIN_C5);
-//!   }else{
-//!      output_low(PIN_C5);
-//!   }
-//!   
-//!   passos++;
-//!   if(passos == 92){
-//!      passos = 0;    
-//!      to = u*0.019;     
-//!   }
-   
-
-   
-   
-}
-
+int passos = 0;
 
 signed int16
    to = 0.0,
@@ -66,9 +58,37 @@ signed int16
    p = 0.0,
    i = 0.0,
    d = 0.0,
-   kp = 1.0,
-   ki = 0.0,
-   kd = 0.0;
+   kp = 1,
+   ki = 1,
+   kd = 1;
+   
+#INT_RTCC
+void  RTCC_isr(void) 
+{
+//!   //1000ms/0,0542ms = 18.45 -> 19 ciclos
+//!   //5000ms/0,0542ms = 92 ciclos
+//!   //(19*valor)/1020 -> valor*(19/1020) -> valor*0.0186274509803922
+   to*0.018;
+   if(passos <= to){
+      output_high(PIN_C5);
+   }else{
+      output_low(PIN_C5);
+   }
+   
+   passos++;
+   if(passos == 19){
+      passos = 0;        
+   }
+   
+}
+
+void hold(int16 espera){
+   int16 tempParado = millis() + espera;
+   while(espera <= get_time_from_rtc()){
+      //N faz nada, só fica esperando o tempo passar
+   }
+}
+
 
 
 void main()
@@ -95,8 +115,16 @@ void main()
    {
       //Entradas
       //0 - 1024
-      temperaturaLida = leituraADC(2);
+      temperaturaLida = leituraADC(2)/2;
       temperaturaUsuario = leituraADC(0);
+      set_pwm1_duty(leituraADC(1));
+      //Convertendo 
+      //Temperatura Max é +50ºC
+      //AD -> ºC = 1024 / (leitura * 50)
+      // leitura*0.048
+      
+     
+      temperaturaUsuario = (temperaturaUsuario*0.048)+28;
       
       //PID
       erro = temperaturaUsuario - temperaturaLida;
@@ -107,20 +135,19 @@ void main()
       //I -> soma o erro para fazer com que se aproxime a zero
       i += erro * ki;
       
-      //D -> 
+      //D -> variação da leitura passada para a leitura agora
       d = (ultimaTemperatura - temperaturaLida) * kd;
-      
+      ultimaTemperatura = temperaturaLida;
       
       //Valor de negativo a positivo
-      controlePID = p + i + d
+      controlePID = p + i + d;
       
-      //Saida Controle
+      //Saida Controle para o acionador;
       to = controlePID;
-     
       
-      printf(lcd_escreve,"\f Entrada %Lu \n",temperaturaUsuario);
-      printf(lcd_escreve,"\r Saida %Lu \n",controlePID);
-      delay_ms(50);
+      printf(lcd_escreve,"\f E: %Ld T: %Ld \n",temperaturaUsuario,temperaturaLida);
+      printf(lcd_escreve,"\r Erro: %Ld \n",erro);
+      fprintf(Serial,"%Ld %Ld %Ld\n",temperaturaUsuario,temperaturaLida,erro);
+      hold(10);
    }
-
 }

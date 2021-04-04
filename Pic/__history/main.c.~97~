@@ -1,4 +1,5 @@
 #include <16F877A.h>
+#include <rtc.h>
 
 #device ADC=10
 
@@ -24,7 +25,20 @@
 #define C_Ds1307ReadMode_U8   0xD1u  // DS1307 ID in read mode
 #define C_Ds1307WriteMode_U8  0xD0u  // DS1307 ID in write mode
 
-
+void RTC_Init(void)
+{
+    I2C_Init();                             // Initialize the I2c module.
+    I2C_Start();                            // Start I2C communication
+ 
+    I2C_Write(C_Ds1307WriteMode_U8);        // Connect to DS1307 by sending its ID on I2c Bus
+    I2C_Write(C_Ds1307ControlRegAddress_U8);// Select the Ds1307 ControlRegister to configure Ds1307
+ 
+    I2C_Write(0x00);                        // Write 0x00 to Control register to disable SQW-Out
+    
+    int sec = I2C_Read(1);
+ 
+    I2C_Stop();                             // Stop I2C communication after initializing DS1307
+}
 
 long leituraADC(int canal){
    set_adc_channel(canal);
@@ -68,12 +82,12 @@ void  RTCC_isr(void)
    
 }
 
-//!void hold(int16 espera){
-//!   int16 tempParado = millis() + espera;
-//!   while(espera <= get_time_from_rtc()){
-//!      //N faz nada, só fica esperando o tempo passar
-//!   }
-//!}
+void hold(int16 espera){
+   int16 tempParado = millis() + espera;
+   while(espera <= get_time_from_rtc()){
+      //N faz nada, só fica esperando o tempo passar
+   }
+}
 
 
 
@@ -84,7 +98,6 @@ void main()
    delay_us(10);
    
    lcd_ini();
-   
    delay_ms(10);
    
    
@@ -135,6 +148,6 @@ void main()
       printf(lcd_escreve,"\f E: %Ld T: %Ld \n",temperaturaUsuario,temperaturaLida);
       printf(lcd_escreve,"\r Erro: %Ld \n",erro);
       fprintf(Serial,"%Ld %Ld %Ld\n",temperaturaUsuario,temperaturaLida,erro);
-      delay_ms(10);
+      hold(10);
    }
 }

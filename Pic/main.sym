@@ -162,14 +162,14 @@ ROM Allocation:
 00052E  @cinit2
 
 Project Directory:
-    E:\tales\Documents\Faculdade\Projetos Micro\Projeto Trabalho Proposta B\Trabalhando4\
+    E:\tales\Documents\Faculdade\Projetos Micro\Projeto Trabalho Proposta B\Pronto\Controle-PID-Temperatura-PIC\Pic\
 
 Project Files:
-    main.c                                                  [02-abr-21 00:32  CRC=20019DF8]
+    main.c                                                  [04-abr-21 19:23  CRC=2A94244B]
     C:\Program Files (x86)\PICC\Devices\16F877A.h           [18-abr-14 16:56  CRC=4F277C97]
     mod_lcd.c                                               [28-jan-21 21:27  CRC=178A4A02]
 
-Source signature=9E3DAE93
+Source signature=A8D034E6
 
 Units:
     main (main)

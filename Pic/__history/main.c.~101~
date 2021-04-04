@@ -135,6 +135,6 @@ void main()
       printf(lcd_escreve,"\f E: %Ld T: %Ld \n",temperaturaUsuario,temperaturaLida);
       printf(lcd_escreve,"\r Erro: %Ld \n",erro);
       fprintf(Serial,"%Ld %Ld %Ld\n",temperaturaUsuario,temperaturaLida,erro);
-      delay_ms(10);
+      hold(10);
    }
 }

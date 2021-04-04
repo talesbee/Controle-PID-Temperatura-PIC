@@ -1,5 +1,4 @@
 #include <16F877A.h>
-
 #device ADC=10
 
 #FUSES NOWDT                    //No Watch Dog Timer
@@ -20,11 +19,6 @@
 #endif
 
 #include <mod_lcd.c>
-
-#define C_Ds1307ReadMode_U8   0xD1u  // DS1307 ID in read mode
-#define C_Ds1307WriteMode_U8  0xD0u  // DS1307 ID in write mode
-
-
 
 long leituraADC(int canal){
    set_adc_channel(canal);
@@ -68,12 +62,12 @@ void  RTCC_isr(void)
    
 }
 
-//!void hold(int16 espera){
-//!   int16 tempParado = millis() + espera;
-//!   while(espera <= get_time_from_rtc()){
-//!      //N faz nada, só fica esperando o tempo passar
-//!   }
-//!}
+void hold(int16 espera){
+   int16 tempParado = millis() + espera;
+   while(espera <= get_time_from_rtc()){
+      //N faz nada, só fica esperando o tempo passar
+   }
+}
 
 
 
@@ -84,7 +78,6 @@ void main()
    delay_us(10);
    
    lcd_ini();
-   
    delay_ms(10);
    
    
@@ -135,6 +128,6 @@ void main()
       printf(lcd_escreve,"\f E: %Ld T: %Ld \n",temperaturaUsuario,temperaturaLida);
       printf(lcd_escreve,"\r Erro: %Ld \n",erro);
       fprintf(Serial,"%Ld %Ld %Ld\n",temperaturaUsuario,temperaturaLida,erro);
-      delay_ms(10);
+      hold(10);
    }
 }

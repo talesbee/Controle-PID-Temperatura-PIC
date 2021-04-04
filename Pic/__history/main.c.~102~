@@ -1,4 +1,5 @@
 #include <16F877A.h>
+
 #device ADC=10
 
 #FUSES NOWDT                    //No Watch Dog Timer
@@ -20,55 +21,60 @@
 
 #include <mod_lcd.c>
 
+#define C_Ds1307ReadMode_U8   0xD1u  // DS1307 ID in read mode
+#define C_Ds1307WriteMode_U8  0xD0u  // DS1307 ID in write mode
+
+
+
 long leituraADC(int canal){
    set_adc_channel(canal);
    delay_us(10);
    return read_adc();
 }
 
+int passos = 0;
 
+signed int16
+   to = 0.0,
+   temperaturaLida = 0.0,
+   temperaturaUsuario = 0.0,
+   ultimaTemperatura = 0.0,
+   controlePID = 0.0,
+   erro = 0.0,
+   p = 0.0,
+   i = 0.0,
+   d = 0.0,
+   kp = 1,
+   ki = 1,
+   kd = 1;
+   
 #INT_RTCC
 void  RTCC_isr(void) 
 {
-//!   entrada = read_adc();
-//!   temperatura= 30;
 //!   //1000ms/0,0542ms = 18.45 -> 19 ciclos
 //!   //5000ms/0,0542ms = 92 ciclos
 //!   //(19*valor)/1020 -> valor*(19/1020) -> valor*0.0186274509803922
-//!   
-//!   
-//!   
-//!   if(passos <= to){
-//!      output_high(PIN_C5);
-//!   }else{
-//!      output_low(PIN_C5);
-//!   }
-//!   
-//!   passos++;
-//!   if(passos == 92){
-//!      passos = 0;    
-//!      to = u*0.019;     
-//!   }
+   to*0.018;
+   if(passos <= to){
+      output_high(PIN_C5);
+   }else{
+      output_low(PIN_C5);
+   }
    
-
-   
+   passos++;
+   if(passos == 19){
+      passos = 0;        
+   }
    
 }
 
+void hold(int16 espera){
+   int16 tempParado = millis() + espera;
+   while(espera <= get_time_from_rtc()){
+      //N faz nada, só fica esperando o tempo passar
+   }
+}
 
-signed int16
-   to = 0,
-   temperaturaLida = 0,
-   temperaturaUsuario = 0,
-   ultimaTemperatura = 0,
-   controlePID = 0,
-   erro = 0,
-   p = 0,
-   i = 0,
-   d = 0,
-   kp = 1.0,
-   ki = 0.1,
-   kd = 0.1;
 
 
 void main()
@@ -78,6 +84,7 @@ void main()
    delay_us(10);
    
    lcd_ini();
+   
    delay_ms(10);
    
    
@@ -95,8 +102,16 @@ void main()
    {
       //Entradas
       //0 - 1024
-      temperaturaLida = leituraADC(2);
+      temperaturaLida = leituraADC(2)/2;
       temperaturaUsuario = leituraADC(0);
+      set_pwm1_duty(leituraADC(1));
+      //Convertendo 
+      //Temperatura Max é +50ºC
+      //AD -> ºC = 1024 / (leitura * 50)
+      // leitura*0.048
+      
+     
+      temperaturaUsuario = (temperaturaUsuario*0.048)+28;
       
       //PID
       erro = temperaturaUsuario - temperaturaLida;
@@ -116,11 +131,10 @@ void main()
       
       //Saida Controle para o acionador;
       to = controlePID;
-     
       
-      printf(lcd_escreve,"\f Entrada %Lu \n",temperaturaUsuario);
-      printf(lcd_escreve,"\r Temp %Lu \n",temperaturaLida);
-      delay_ms(50);
+      printf(lcd_escreve,"\f E: %Ld T: %Ld \n",temperaturaUsuario,temperaturaLida);
+      printf(lcd_escreve,"\r Erro: %Ld \n",erro);
+      fprintf(Serial,"%Ld %Ld %Ld\n",temperaturaUsuario,temperaturaLida,erro);
+      delay_ms(10);
    }
-
 }

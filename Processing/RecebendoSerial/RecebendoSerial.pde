@@ -1,65 +1,134 @@
-// Gráfico
-// por David A. Mellis
-//
-// Demonstra a leitura de dados vindos a partir da placa Arduino
-// por meio do desenho de um gráfico dos valores recebidos.
-//
-// baseado em Analog In
-// por <a href="http://itp.jtnimoy.com">Josh Nimoy</a>.
 import processing.serial.*;
 Serial port;
 String buff = "";
 int NEWLINE = 10;
-// Armazene os últimos 64 valores recebidos de forma que possamos
-//desenhá-los
-int[] values = new int[64];
+int[] entrada = new int[100];
+int[] temperatura = new int[100];
+int[] erro = new int[100];
+PFont f;
+PFont F;
 void setup()
 {
-  size(512, 256);
+  f = createFont("Arial", 12, true);
+  F = createFont("Arial", 24, true);
+  size(1000, 600); 
   println("Portas seriais disponíveis:");
   println(Serial.list());
   port = new Serial(this, Serial.list()[1], 9600);// atenção para esta
+    for (int i = 0; i<99; i++) {
+      entrada[i] = 0;
+      temperatura[i] = 0; 
+      erro[i] = 0;
+    }
+  
 }
 void draw()
 {
-  background(53);
-  stroke(255);
-  // Desenhe os valores guardados com uma linha entre os pontos.
-  for (int i = 0; i < 63; i++)
-    line(i * 8, 255 - values[i], (i + 1) * 8, 255 - values[i + 1]);
-    
   while (port.available() > 0) {
     serialEvent(port.read());
   }
 }
+
 void serialEvent(int serial)
 {
   if (serial != NEWLINE) {
     // Armazene todos os caracteres na linha
     buff += char(serial);
   } else {
-    println(buff);
-    buff = "";
-    /*
-    if (buff != "") {
-      // O final de cada linha é marcado com dois caracteres: um retorno
-      // de carro e um nova linha. Chegamos aqui porque temos um nova
-      //linha, 
-      // mas ainda precisamos excluir o retorno de carro.
-      buff = buff.substring(0, buff.length()-1);
-      // Transforme a string em inteiro. Dividimos por 4 porque
-      // as entradas analógicas vão de 0 a 1023, enquanto que as cores
-      // em Processing vão apenas de 0 a 255.
-      int val = Integer.parseInt(buff);
-      // Limpe o valor contido em "buff"
-      
-      // Desloque os valores existentes para liberar espaço para novos
-      //valores.
-      for (int i = 0; i < 63; i++)
-        values[i] = values[i + 1];
-      // Inclua ao vetor o valor recebido
-      values[63] = val;
-    }*/
+    //println(buff);
     
+    String recebido[] = split(buff, " ");
+    if(recebido.length>=2){
+      entrada[99] = Integer.parseInt(recebido[0]);
+      temperatura[99] = Integer.parseInt(recebido[1]);
+      erro[99] = Integer.parseInt(recebido[2]);
+    }
+
+    for (int i = 1; i<100; i++) {
+      entrada[i-1] = entrada[i];
+      temperatura[i-1] = temperatura[i]; 
+      erro[i-1] = erro[i];
+    }
+    
+    desenhaMoldura();
+    
+    for (int i = 0; i < 99; i++) {
+      int inicioX = (i*9) + 42;
+      int fimX = (i+1)*9 + 42;
+      stroke(#000AFC);
+      line(inicioX, 256 - (entrada[i]*2.45),fimX , 256 - entrada[i+1]*2.45);
+      stroke(#14FC00);
+      line(inicioX, 256 - (temperatura[i]*2.45), fimX, 256 - temperatura[i+1]*2.45);
+      stroke(#FC0004);
+      line(inicioX, 407 - (erro[i]*2), fimX , 407 - erro[i+1]*2);
+    }
+    buff = "";
   }
+}
+void desenhaMoldura() {
+  background(#454842);
+  
+  fill(0, 102, 153);
+  stroke(175);                       // temperature line
+  line(40, height-65, 40, 0);
+
+  stroke(175);                          // Time line
+  line(40, height-65, width, height-65);
+
+  textFont(F);       
+  fill(255);
+
+  textAlign(RIGHT);
+  fill(0);
+  text("PID Temperatura", 650, 40); 
+
+  textAlign(RIGHT);
+  text("Tales Iago Batista", 653, 70); 
+
+  fill(255);
+  textAlign(RIGHT);
+  text("°C", 70, 40);
+
+  textAlign(RIGHT);
+  text("Erro", 90, 310);
+
+  textAlign(RIGHT);
+  text("t (s)", 650, 580);    
+
+
+  fill(240);
+  textFont(f); 
+
+  textAlign(RIGHT);
+  text("(em graus)", 140, 40); 
+
+  textAlign(RIGHT);                 
+  text("80 -", 40, 60);
+
+  textAlign(RIGHT);              
+  text("60 -", 40, 110);
+
+  textAlign(RIGHT);               
+  text("40 -", 40, 160);
+
+  textAlign(RIGHT);                
+  text("20 -", 40, 210);
+
+  textAlign(RIGHT);                
+  text("0 -", 40, 260);
+
+  textAlign(RIGHT);               
+  text("50 -", 40, 310);
+
+  textAlign(RIGHT);                 
+  text("25 -", 40, 360);
+
+  textAlign(RIGHT);
+  text("0 -", 40, 410);
+
+  textAlign(RIGHT);
+  text("-25 -", 40, 460);
+
+  textAlign(RIGHT);
+  text("-50 -", 40, 510);
 }

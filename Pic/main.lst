@@ -1,6 +1,6 @@
-CCS PCM C Compiler, Version 5.025, 7201               02-abr-21 00:32
+CCS PCM C Compiler, Version 5.025, 7201               04-abr-21 19:23
 
-               Filename:   E:\tales\Documents\Faculdade\Projetos Micro\Projeto Trabalho Proposta B\Trabalhando4\main.lst
+               Filename:   E:\tales\Documents\Faculdade\Projetos Micro\Projeto Trabalho Proposta B\Pronto\Controle-PID-Temperatura-PIC\Pic\main.lst
 
                ROM used:   1685 words (21%)
                            Largest free fragment is 2048
@@ -1020,6 +1020,7 @@ CCS PCM C Compiler, Version 5.025, 7201               02-abr-21 00:32
 ....................  
 .................... #list 
 ....................  
+....................  
 .................... #device ADC=10 
 ....................  
 .................... #FUSES NOWDT                    //No Watch Dog Timer 
@@ -1418,6 +1419,11 @@ CCS PCM C Compiler, Version 5.025, 7201               02-abr-21 00:32
 .................... } 
 ....................  
 ....................  
+.................... #define C_Ds1307ReadMode_U8   0xD1u  // DS1307 ID in read mode 
+.................... #define C_Ds1307WriteMode_U8  0xD0u  // DS1307 ID in write mode 
+....................  
+....................  
+....................  
 .................... long leituraADC(int canal){ 
 ....................    set_adc_channel(canal); 
 *
@@ -1542,6 +1548,13 @@ CCS PCM C Compiler, Version 5.025, 7201               02-abr-21 00:32
 0125:  GOTO   02B
 .................... } 
 ....................  
+.................... //!void hold(int16 espera){ 
+.................... //!   int16 tempParado = millis() + espera; 
+.................... //!   while(espera <= get_time_from_rtc()){ 
+.................... //!      //N faz nada, só fica esperando o tempo passar 
+.................... //!   } 
+.................... //!} 
+....................  
 ....................  
 ....................  
 .................... void main() 
@@ -1616,6 +1629,7 @@ CCS PCM C Compiler, Version 5.025, 7201               02-abr-21 00:32
 ....................     
 ....................    lcd_ini(); 
 053F:  GOTO   192
+....................     
 ....................    delay_ms(10); 
 0540:  MOVLW  0A
 0541:  MOVWF  50
