@@ -21,11 +21,6 @@
 
 #include <mod_lcd.c>
 
-#define C_Ds1307ReadMode_U8   0xD1u  // DS1307 ID in read mode
-#define C_Ds1307WriteMode_U8  0xD0u  // DS1307 ID in write mode
-
-
-
 long leituraADC(int canal){
    set_adc_channel(canal);
    delay_us(10);
@@ -68,15 +63,6 @@ void  RTCC_isr(void)
    
 }
 
-//!void hold(int16 espera){
-//!   int16 tempParado = millis() + espera;
-//!   while(espera <= get_time_from_rtc()){
-//!      //N faz nada, só fica esperando o tempo passar
-//!   }
-//!}
-
-
-
 void main()
 {
    setup_adc_ports(AN0_AN1_AN2_AN3_AN4);
@@ -109,8 +95,6 @@ void main()
       //Temperatura Max é +50ºC
       //AD -> ºC = 1024 / (leitura * 50)
       // leitura*0.048
-      
-     
       temperaturaUsuario = (temperaturaUsuario*0.048)+28;
       
       //PID

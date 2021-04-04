@@ -1,4 +1,4 @@
-CCS PCM C Compiler, Version 5.025, 7201               04-abr-21 19:23
+CCS PCM C Compiler, Version 5.025, 7201               04-abr-21 19:52
 
                Filename:   E:\tales\Documents\Faculdade\Projetos Micro\Projeto Trabalho Proposta B\Pronto\Controle-PID-Temperatura-PIC\Pic\main.lst
 
@@ -1419,11 +1419,6 @@ CCS PCM C Compiler, Version 5.025, 7201               04-abr-21 19:23
 .................... } 
 ....................  
 ....................  
-.................... #define C_Ds1307ReadMode_U8   0xD1u  // DS1307 ID in read mode 
-.................... #define C_Ds1307WriteMode_U8  0xD0u  // DS1307 ID in write mode 
-....................  
-....................  
-....................  
 .................... long leituraADC(int canal){ 
 ....................    set_adc_channel(canal); 
 *
@@ -1547,15 +1542,6 @@ CCS PCM C Compiler, Version 5.025, 7201               04-abr-21 19:23
 0124:  BCF    0A.4
 0125:  GOTO   02B
 .................... } 
-....................  
-.................... //!void hold(int16 espera){ 
-.................... //!   int16 tempParado = millis() + espera; 
-.................... //!   while(espera <= get_time_from_rtc()){ 
-.................... //!      //N faz nada, só fica esperando o tempo passar 
-.................... //!   } 
-.................... //!} 
-....................  
-....................  
 ....................  
 .................... void main() 
 *
@@ -1742,8 +1728,6 @@ CCS PCM C Compiler, Version 5.025, 7201               04-abr-21 19:23
 ....................       //Temperatura Max é +50ºC 
 ....................       //AD -> ºC = 1024 / (leitura * 50) 
 ....................       // leitura*0.048 
-....................        
-....................       
 ....................       temperaturaUsuario = (temperaturaUsuario*0.048)+28; 
 0598:  MOVF   32,W
 0599:  MOVWF  5B

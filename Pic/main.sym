@@ -165,11 +165,11 @@ Project Directory:
     E:\tales\Documents\Faculdade\Projetos Micro\Projeto Trabalho Proposta B\Pronto\Controle-PID-Temperatura-PIC\Pic\
 
 Project Files:
-    main.c                                                  [04-abr-21 19:23  CRC=2A94244B]
+    main.c                                                  [04-abr-21 19:52  CRC=693228E9]
     C:\Program Files (x86)\PICC\Devices\16F877A.h           [18-abr-14 16:56  CRC=4F277C97]
     mod_lcd.c                                               [28-jan-21 21:27  CRC=178A4A02]
 
-Source signature=A8D034E6
+Source signature=E76E3984
 
 Units:
     main (main)

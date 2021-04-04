@@ -1,7 +1,7 @@
-D G "__PCM__" 0 136 ""5.025""
-D G "__DEVICE__" 0 136 "877"
-D G "__DATE__" 0 136 ""04-abr-21""
-D G "__TIME__" 0 136 ""19:23:36"" "Standard Header file for the PIC16F877A device ////////////////"
+D G "__PCM__" 0 0 ""5.025""
+D G "__DEVICE__" 0 0 ""
+D G "__DATE__" 0 0 ""04-abr-21""
+D G "__TIME__" 0 0 ""19:52:29"" "Standard Header file for the PIC16F877A device ////////////////"
 c L "set_tris_a" 1 3 6 "FUNCTION"
 v L "value" 1 37 "int8" `54 
 f B "set_tris_a" 1 37 "void(int8 value)" `53 
@@ -825,37 +825,34 @@ C L "lcd_le" 2 2 1 "FUNCTION"
 C L "lcd_le" 2 2 1 "FUNCTION"
 C L "lcd_le" 2 2 1 "FUNCTION"
 C L "lcd_le" 2 2 1 "FUNCTION"
-D G "C_Ds1307ReadMode_U8" 0 24 "0xD1u" "DS1307 ID in read mode"
-D G "C_Ds1307WriteMode_U8" 0 25 "0xD0u" "DS1307 ID in write mode"
-V L "canal" 0 29 "int8" `645 
-F G "leituraADC" 0 29 "int16(int8 canal)" `644 
-V G "passos" 0 35 "int8" `646 
-V G "to" 0 38 "sint16" `647 
-V G "temperaturaLida" 0 39 "sint16" `648 
-V G "temperaturaUsuario" 0 40 "sint16" `649 
-V G "ultimaTemperatura" 0 41 "sint16" `650 
-V G "controlePID" 0 42 "sint16" `651 
-V G "erro" 0 43 "sint16" `652 
-V G "p" 0 44 "sint16" `653 
-V G "i" 0 45 "sint16" `654 
-V G "d" 0 46 "sint16" `655 
-V G "kp" 0 47 "sint16" `656 
-V G "ki" 0 48 "sint16" `657 
-V G "kd" 0 49 "sint16" `658 
-F G "RTCC_isr" 0 53 "void()" `659  "!   //1000ms/0,0542ms = 18.45 -> 19 ciclos"
-C L "RTCC_isr" 0 55 2 "FUNCTION"
-C L "MAIN" 0 55 6 "FUNCTION"
-F G "MAIN" 0 81 "void(int16 espera)" `666 
-C L "MAIN" 0 55 1 "FUNCTION"
-C L "MAIN" 0 55 1 "FUNCTION"
-C L "MAIN" 0 55 2 "FUNCTION"
-C L "MAIN" 0 55 4 "FUNCTION"
-C L "MAIN" 0 55 1 "FUNCTION"
-C L "MAIN" 0 55 1 "FUNCTION"
-C L "MAIN" 0 55 1 "FUNCTION"
-C L "MAIN" 0 55 1 "FUNCTION"
-C L "MAIN" 0 55 1 "FUNCTION"
-C L "MAIN" 0 55 1 "FUNCTION"
+V L "canal" 0 24 "int8" `645 
+F G "leituraADC" 0 24 "int16(int8 canal)" `644 
+V G "passos" 0 30 "int8" `646 
+V G "to" 0 33 "sint16" `647 
+V G "temperaturaLida" 0 34 "sint16" `648 
+V G "temperaturaUsuario" 0 35 "sint16" `649 
+V G "ultimaTemperatura" 0 36 "sint16" `650 
+V G "controlePID" 0 37 "sint16" `651 
+V G "erro" 0 38 "sint16" `652 
+V G "p" 0 39 "sint16" `653 
+V G "i" 0 40 "sint16" `654 
+V G "d" 0 41 "sint16" `655 
+V G "kp" 0 42 "sint16" `656 
+V G "ki" 0 43 "sint16" `657 
+V G "kd" 0 44 "sint16" `658 
+F G "RTCC_isr" 0 48 "void()" `659  "!   //1000ms/0,0542ms = 18.45 -> 19 ciclos"
+C L "RTCC_isr" 0 50 2 "FUNCTION"
+F G "MAIN" 0 67 "void()" `666 
+C L "MAIN" 0 50 1 "FUNCTION"
+C L "MAIN" 0 50 1 "FUNCTION"
+C L "MAIN" 0 50 2 "FUNCTION"
+C L "MAIN" 0 50 4 "FUNCTION"
+C L "MAIN" 0 50 1 "FUNCTION"
+C L "MAIN" 0 50 1 "FUNCTION"
+C L "MAIN" 0 50 1 "FUNCTION"
+C L "MAIN" 0 50 1 "FUNCTION"
+C L "MAIN" 0 50 1 "FUNCTION"
+C L "MAIN" 0 50 1 "FUNCTION"
 F B "reset_cpu" 0 0
 F B "abs" 1 0
 F B "sleep" 0 0
