@@ -1,6 +1,1 @@
->>> Warning 207 "main.c" Line 52(1,1): Code has no effect
->>> Warning 216 "main.c" Line 124(1,2): Interrupts disabled during call to prevent re-entrancy:  (@SITOF)
->>> Warning 216 "main.c" Line 124(1,2): Interrupts disabled during call to prevent re-entrancy:  (@MULFF)
-      Memory usage:   ROM=21%      RAM=13% - 21%
-      0 Errors,  3 Warnings.
-Build Successful.
+>>> Warning 207 "main.c" Line 53(1,1): Code has no effect

@@ -1,5 +1,5 @@
 ÀÄmain
-   ÃÄMAIN  0/405  Ram=4
+   ÃÄMAIN  0/452  Ram=4
    ³  ÃÄ@cinit1  (Inline)  Ram=0
    ³  ÃÄlcd_ini  0/61  Ram=2
    ³  ³  ÃÄ@delay_ms1  0/20  Ram=1
@@ -21,6 +21,9 @@
    ³  ÃÄ@MULS1616  0/46  Ram=6
    ³  ÃÄ@MULS1616  0/46  Ram=6
    ³  ÃÄ@MULS1616  0/46  Ram=6
+   ³  ÃÄ@MULS1616  0/46  Ram=6
+   ³  ÃÄ@MULS1616  0/46  Ram=6
+   ³  ÃÄ@SITOF  0/37  Ram=2
    ³  ÃÄ@PSTRINGCN7_638  0/87  Ram=5
    ³  ³  ÃÄlcd_escreve  0/55  Ram=1
    ³  ³  ³  ÃÄlcd_envia_byte  0/33  Ram=3
@@ -57,7 +60,9 @@
    ³  ÃÄ@PRINTF_LD_9600_62_63  0/118  Ram=9
    ³  ÃÄ@PRINTF_LD_9600_62_63  0/118  Ram=9
    ³  ÃÄ@PRINTF_LD_9600_62_63  0/118  Ram=9
+   ³  ÃÄ@PRINTF_LD_9600_62_63  0/118  Ram=9
    ³  ÀÄ@delay_ms1  0/20  Ram=1
-   ÀÄRTCC_isr  0/53  Ram=0
-      ÃÄ@SITOF  0/37  Ram=2
-      ÀÄ@MULFF  0/117  Ram=13
+   ÀÄRTCC_isr  0/152  Ram=0
+      ÃÄ@MULFF  0/117  Ram=13
+      ÃÄ@ITOF  (Inline)  Ram=2
+      ÀÄ@FLT  (Inline)  Ram=10

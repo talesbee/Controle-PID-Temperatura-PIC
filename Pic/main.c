@@ -29,8 +29,7 @@ long leituraADC(int canal){
 
 int passos = 0;
 
-signed int16
-   to = 0.0,
+signed int16 
    temperaturaLida = 0.0,
    temperaturaUsuario = 0.0,
    ultimaTemperatura = 0.0,
@@ -41,14 +40,16 @@ signed int16
    d = 0.0,
    kp = 1,
    ki = 1,
-   kd = 1;
-   
+   kd = 1,
+   tempoEmCadaLeitura = 0;
+float to = 0.0;
+
 #INT_RTCC
 void  RTCC_isr(void) 
 {
 //!   //1000ms/0,0542ms = 18.45 -> 19 ciclos
 //!   //5000ms/0,0542ms = 92 ciclos
-//!   //(19*valor)/1020 -> valor*(19/1020) -> valor*0.0186274509803922
+//!   //(19*valor)/100 -> valor*(19/100) -> valor*0.0186274509803922
    to*0.018;
    if(passos <= to){
       output_high(PIN_C5);
@@ -71,7 +72,7 @@ void main()
    
    lcd_ini();
    
-   delay_ms(10);
+   delay_us(10);
    
    
    setup_adc(ADC_CLOCK_DIV_16);
@@ -97,6 +98,7 @@ void main()
       // leitura*0.048
       temperaturaUsuario = (temperaturaUsuario*0.048)+28;
       
+      tempoEmCadaLeitura = 1; //Segundos
       //PID
       erro = temperaturaUsuario - temperaturaLida;
       
@@ -104,10 +106,10 @@ void main()
       p = erro * kp;
       
       //I -> soma o erro para fazer com que se aproxime a zero
-      i += erro * ki;
+      i += erro * ki * tempoEmCadaLeitura;
       
       //D -> variação da leitura passada para a leitura agora
-      d = (ultimaTemperatura - temperaturaLida) * kd;
+      d = (ultimaTemperatura - temperaturaLida) * kd * tempoEmCadaLeitura;
       ultimaTemperatura = temperaturaLida;
       
       //Valor de negativo a positivo
@@ -118,7 +120,7 @@ void main()
       
       printf(lcd_escreve,"\f E: %Ld T: %Ld \n",temperaturaUsuario,temperaturaLida);
       printf(lcd_escreve,"\r Erro: %Ld \n",erro);
-      fprintf(Serial,"%Ld %Ld %Ld\n",temperaturaUsuario,temperaturaLida,erro);
+      fprintf(Serial,"%Ld %Ld %Ld %Ld\n",temperaturaUsuario,temperaturaLida,erro,controlePID);
       delay_ms(10);
    }
 }
