@@ -44,13 +44,18 @@ signed int16
    tempoEmCadaLeitura = 0;
 float to = 0.0;
 
+
 #INT_RTCC
 void  RTCC_isr(void) 
 {
-//!   //1000ms/0,0542ms = 18.45 -> 19 ciclos
-//!   //5000ms/0,0542ms = 92 ciclos
-//!   //(19*valor)/100 -> valor*(19/100) -> valor*0.0186274509803922
-   to*0.018;
+   /*
+   Configuração do PWM para 1s -> 1000ms
+   A interrupção leva 0,0512ms para ser acionada
+   Se queremos que o PWM tenha 1000ms de tempo total
+   Dividimos isso pelo tempo que leva cada "ciclo" (valor declarado ao criar o timer0, linha 87)
+   1000ms/0,0512ms = 19.53 -> 20 ciclos, ou 20 passos
+   */
+
    if(passos <= to){
       output_high(PIN_C5);
    }else{
@@ -58,7 +63,7 @@ void  RTCC_isr(void)
    }
    
    passos++;
-   if(passos == 19){
+   if(passos == 20){
       passos = 0;        
    }
    
@@ -96,7 +101,7 @@ void main()
       //Temperatura Max é +50ºC
       //AD -> ºC = 1024 / (leitura * 50)
       // leitura*0.048
-      temperaturaUsuario = (temperaturaUsuario*0.048)+28;
+      temperaturaUsuario = (temperaturaUsuario*0.048)+28; //Temperatura minima é 28 então é de 28 a 77
       
       tempoEmCadaLeitura = 1; //Segundos
       //PID
@@ -113,13 +118,13 @@ void main()
       ultimaTemperatura = temperaturaLida;
       
       //Valor de negativo a positivo
-      controlePID = p + i + d;
+      controlePID = p+i+d;
       
       //Saida Controle para o acionador;
       to = controlePID;
       
       printf(lcd_escreve,"\f E: %Ld T: %Ld \n",temperaturaUsuario,temperaturaLida);
-      printf(lcd_escreve,"\r Erro: %Ld \n",erro);
+      printf(lcd_escreve,"\r PID: %Ld \n",controlePID);
       fprintf(Serial,"%Ld %Ld %Ld %Ld\n",temperaturaUsuario,temperaturaLida,erro,controlePID);
       delay_ms(10);
    }

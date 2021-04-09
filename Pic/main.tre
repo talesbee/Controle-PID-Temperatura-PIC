@@ -1,5 +1,5 @@
 ÀÄmain
-   ÃÄMAIN  0/452  Ram=4
+   ÃÄMAIN  0/454  Ram=4
    ³  ÃÄ@cinit1  (Inline)  Ram=0
    ³  ÃÄlcd_ini  0/61  Ram=2
    ³  ³  ÃÄ@delay_ms1  0/20  Ram=1
@@ -10,7 +10,6 @@
    ³  ³  ÀÄlcd_envia_byte  0/33  Ram=3
    ³  ³     ÃÄlcd_envia_nibble  0/39  Ram=1
    ³  ³     ÀÄlcd_envia_nibble  0/39  Ram=1
-   ³  ÃÄ@delay_ms1  0/20  Ram=1
    ³  ÃÄleituraADC  0/27  Ram=1
    ³  ÃÄleituraADC  0/27  Ram=1
    ³  ÃÄleituraADC  0/27  Ram=1

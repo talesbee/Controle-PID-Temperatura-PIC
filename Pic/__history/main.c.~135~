@@ -1,4 +1,5 @@
 #include <16F877A.h>
+
 #device ADC=10
 
 #FUSES NOWDT                    //No Watch Dog Timer
@@ -22,14 +23,13 @@
 
 long leituraADC(int canal){
    set_adc_channel(canal);
-   delay_us(5);
+   delay_us(10);
    return read_adc();
 }
 
 int passos = 0;
 
-signed int16
-   to = 0.0,
+signed int16 
    temperaturaLida = 0.0,
    temperaturaUsuario = 0.0,
    ultimaTemperatura = 0.0,
@@ -39,16 +39,26 @@ signed int16
    i = 0.0,
    d = 0.0,
    kp = 1,
-   ki = 0,
-   kd = 0;
-   
+   ki = 1,
+   kd = 1,
+   tempoEmCadaLeitura = 0;
+float to = 0.0;
+
+
 #INT_RTCC
 void  RTCC_isr(void) 
 {
-//!   //1000ms/0,0542ms = 18.45 -> 19 ciclos
-//!   //5000ms/0,0542ms = 92 ciclos
-//!   //(19*valor)/1020 -> valor*(19/1020) -> valor*0.0186274509803922
-   to*0.018;
+   /*
+   Configuração do PWM para 1s -> 1000ms
+   A interrupção leva 0,0512ms para ser acionada
+   Se queremos que o PWM tenha 1000ms de tempo total
+   Dividimos isso pelo tempo que leva cada "ciclo" (valor declarado ao criar o timer0, linha 87)
+   1000ms/0,0512ms = 19.53 -> 20 ciclos
+   Agora precisamos converter a entrada (que pode variar entre 0 a +100)
+   Para a quantidade de ciclos, que no maximo é 20
+   (20*valorPWM)/100 -> valorPWM*(20/100) -> valorPWM*0.2
+   */
+   
    if(passos <= to){
       output_high(PIN_C5);
    }else{
@@ -56,13 +66,11 @@ void  RTCC_isr(void)
    }
    
    passos++;
-   if(passos == 19){
+   if(passos == 20){
       passos = 0;        
    }
    
 }
-
-
 
 void main()
 {
@@ -71,7 +79,8 @@ void main()
    delay_us(10);
    
    lcd_ini();
-   delay_ms(10);
+   
+   delay_us(10);
    
    
    setup_adc(ADC_CLOCK_DIV_16);
@@ -95,10 +104,9 @@ void main()
       //Temperatura Max é +50ºC
       //AD -> ºC = 1024 / (leitura * 50)
       // leitura*0.048
+      temperaturaUsuario = (temperaturaUsuario*0.048)+28; //Temperatura minima é 28 então é de 28 a 77
       
-     
-      temperaturaUsuario = (temperaturaUsuario*0.048)+28;
-      
+      tempoEmCadaLeitura = 2; //Segundos
       //PID
       erro = temperaturaUsuario - temperaturaLida;
       
@@ -106,21 +114,21 @@ void main()
       p = erro * kp;
       
       //I -> soma o erro para fazer com que se aproxime a zero
-      i += erro * ki;
+      i += erro * ki * tempoEmCadaLeitura;
       
       //D -> variação da leitura passada para a leitura agora
-      d = (ultimaTemperatura - temperaturaLida) * kd;
+      d = (ultimaTemperatura - temperaturaLida) * kd * tempoEmCadaLeitura;
       ultimaTemperatura = temperaturaLida;
       
       //Valor de negativo a positivo
-      controlePID = p + i + d;
+      controlePID = p+i+d;
       
       //Saida Controle para o acionador;
       to = controlePID;
       
       printf(lcd_escreve,"\f E: %Ld T: %Ld \n",temperaturaUsuario,temperaturaLida);
-      printf(lcd_escreve,"\r Erro: %Ld \n",erro);
-      fprintf(Serial,"%Ld %Ld %Ld\n",temperaturaUsuario,temperaturaLida,erro);
+      printf(lcd_escreve,"\r PID: %Ld \n",controlePID);
+      fprintf(Serial,"%Ld %Ld %Ld %Ld\n",temperaturaUsuario,temperaturaLida,erro,controlePID);
       delay_ms(10);
    }
 }
